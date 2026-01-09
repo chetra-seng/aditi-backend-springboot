@@ -20,6 +20,19 @@ author: Aditi Backend Course
 description: Master Spring Boot from basics to building production-ready REST APIs. Learn IoC, DI, Controllers, Services, Configuration, and Testing.
 themeConfig:
   primary: '#6DB33F'
+
+# Open Graph / Social Media
+seoMeta:
+  ogType: website
+  ogTitle: Spring Boot Basics - Building Modern Java APIs
+  ogDescription: Master Spring Boot from basics to building production-ready REST APIs. Learn IoC, Dependency Injection, Controllers, Services, and Testing.
+  ogImage: https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=1200&h=630&fit=crop
+  ogUrl: https://aditi-backend-spring-boot.chetraseng.com
+
+# HTML attributes
+htmlAttrs:
+  lang: en
+  dir: ltr
 ---
 
 # Spring Boot Basics
