@@ -175,17 +175,15 @@ application-test.properties    # Testing
 ```properties
 # application-dev.properties
 server.port=8080
-spring.datasource.url=jdbc:h2:mem:devdb
-spring.jpa.show-sql=true
 logging.level.com.example=DEBUG
+app.feature.debug-mode=true
 ```
 
 ```properties
 # application-prod.properties
 server.port=80
-spring.datasource.url=jdbc:postgresql://prod-db:5432/myapp
-spring.jpa.show-sql=false
 logging.level.com.example=WARN
+app.feature.debug-mode=false
 ```
 
 ---
@@ -232,8 +230,8 @@ Conditional bean creation:
 public class DevConfig {
 
     @Bean
-    public DataSource dataSource() {
-        return new H2DataSource();
+    public NotificationService notificationService() {
+        return new ConsoleNotificationService(); // Log to console
     }
 }
 
@@ -242,8 +240,8 @@ public class DevConfig {
 public class ProdConfig {
 
     @Bean
-    public DataSource dataSource() {
-        return new PostgresDataSource();
+    public NotificationService notificationService() {
+        return new EmailNotificationService(); // Send real emails
     }
 }
 ```
@@ -254,19 +252,19 @@ public class ProdConfig {
 
 ```properties
 # Reference environment variables
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
+app.api-key=${API_KEY}
+app.external-service-url=${SERVICE_URL}
 
 # With default values
-spring.datasource.url=${DATABASE_URL:jdbc:h2:mem:testdb}
+app.timeout=${TIMEOUT:5000}
 ```
 
 <v-click>
 
 Setting environment variables:
 ```bash
-export DB_USERNAME=admin
-export DB_PASSWORD=secret
+export API_KEY=your-secret-key
+export SERVICE_URL=https://api.example.com
 java -jar app.jar
 ```
 
@@ -393,19 +391,14 @@ server.port=8080
 server.address=0.0.0.0
 server.tomcat.max-threads=200
 
-# Database
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
-spring.datasource.hikari.maximum-pool-size=10
-
-# JPA
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=false
-
 # Jackson (JSON)
 spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
 spring.jackson.time-zone=UTC
+
+# Logging
+logging.level.root=INFO
+logging.level.org.springframework.web=DEBUG
+logging.file.name=app.log
 ```
 
 ---

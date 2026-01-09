@@ -97,28 +97,26 @@ void getUser_validId_returnsUser() { }
 # Service Unit Test
 
 ```java
-@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
-
-    @InjectMocks
     private UserService userService;
+
+    @BeforeEach
+    void setUp() {
+        userService = new UserService();
+    }
 
     @Test
     void shouldReturnUserWhenFound() {
         // Arrange
-        User user = new User(1L, "John", "john@example.com");
-        when(userRepository.findById(1L))
-            .thenReturn(Optional.of(user));
+        User created = userService.create("John", "john@example.com");
 
         // Act
-        User result = userService.findById(1L);
+        User result = userService.findById(created.getId());
 
         // Assert
         assertThat(result.getName()).isEqualTo("John");
-        verify(userRepository).findById(1L);
+        assertThat(result.getEmail()).isEqualTo("john@example.com");
     }
 }
 ```
@@ -130,9 +128,6 @@ class UserServiceTest {
 ```java
 @Test
 void shouldThrowExceptionWhenUserNotFound() {
-    when(userRepository.findById(99L))
-        .thenReturn(Optional.empty());
-
     assertThatThrownBy(() -> userService.findById(99L))
         .isInstanceOf(ResourceNotFoundException.class)
         .hasMessageContaining("User not found");
@@ -159,7 +154,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(mockRepository);
+        userService = new UserService();
     }
 
     @AfterEach
@@ -283,52 +278,22 @@ class UserIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
-    }
-
     @Test
     void shouldCreateAndRetrieveUser() throws Exception {
         // Create user
-        mockMvc.perform(post("/api/users")
+        MvcResult result = mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"John\",\"email\":\"john@test.com\"}"))
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andReturn();
 
-        // Verify in database
-        assertThat(userRepository.findByEmail("john@test.com"))
-            .isPresent();
-    }
-}
-```
+        // Extract ID from response
+        String response = result.getResponse().getContentAsString();
 
----
-
-# Repository Tests
-
-```java
-@DataJpaTest
-class UserRepositoryTest {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    void shouldFindByEmail() {
-        // Arrange
-        User user = new User(null, "John", "john@example.com");
-        userRepository.save(user);
-
-        // Act
-        Optional<User> found = userRepository.findByEmail("john@example.com");
-
-        // Assert
-        assertThat(found).isPresent();
-        assertThat(found.get().getName()).isEqualTo("John");
+        // Verify user can be retrieved
+        mockMvc.perform(get("/api/users/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.name").value("John"));
     }
 }
 ```
@@ -347,8 +312,8 @@ class UserServiceIntegrationTest {
 
 ```properties
 # application-test.properties
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.jpa.hibernate.ddl-auto=create-drop
+logging.level.com.example=DEBUG
+server.port=0
 ```
 
 ---
@@ -454,7 +419,6 @@ Focus on:
 - JUnit 5 for test framework
 - Mockito for mocking dependencies
 - `@WebMvcTest` for controller tests
-- `@DataJpaTest` for repository tests
 - `@SpringBootTest` for integration tests
 - AssertJ for fluent assertions
 - Test profiles for isolated configuration

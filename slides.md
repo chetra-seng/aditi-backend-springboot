@@ -11,13 +11,13 @@ download: true
 info: |
   ## Spring Boot Basics - Complete Course
 
-  A comprehensive Spring Boot tutorial covering everything from core concepts to building production-ready REST APIs. Learn IoC, Dependency Injection, Controllers, Services, Configuration, Validation, Exception Handling, and Testing.
+  A comprehensive Spring Boot tutorial covering everything from core concepts to building production-ready REST APIs. Learn IoC, Dependency Injection, Controllers, Services, Configuration, Exception Handling, and Testing.
 
   Perfect for Java developers looking to build modern backend applications.
 
-keywords: Spring Boot, Java, REST API, Spring Framework, Backend Development, IoC, Dependency Injection, JPA, Hibernate, Microservices
+keywords: Spring Boot, Java, REST API, Spring Framework, Backend Development, IoC, Dependency Injection, Microservices
 author: Aditi Backend Course
-description: Master Spring Boot from basics to building production-ready REST APIs. Learn IoC, DI, Controllers, Services, Configuration, Validation, and Testing.
+description: Master Spring Boot from basics to building production-ready REST APIs. Learn IoC, DI, Controllers, Services, Configuration, and Testing.
 themeConfig:
   primary: '#6DB33F'
 ---
@@ -28,7 +28,7 @@ Building Modern Java Applications
 
 ---
 
-# What are we doing today
+# What are we doing today 🚀
 
 - Understand what Spring and Spring Boot are
 - Set up a Spring Boot project from scratch
@@ -36,7 +36,6 @@ Building Modern Java Applications
 - Learn project structure and configuration
 - Build REST APIs with Controllers and Services
 - Handle exceptions gracefully
-- Add input validation
 - Write unit and integration tests
 
 ---
@@ -48,7 +47,7 @@ layout: center
 Understanding Spring Boot
 
 ---
-src: ./contents/01-introduction.md
+src: ./sections/01-introduction.md
 ---
 
 ---
@@ -60,7 +59,7 @@ layout: center
 Getting your development environment ready
 
 ---
-src: ./contents/02-environment-setup.md
+src: ./sections/02-environment-setup.md
 ---
 
 ---
@@ -72,7 +71,7 @@ layout: center
 IoC, Dependency Injection, and Beans
 
 ---
-src: ./contents/03-spring-core-concepts.md
+src: ./sections/03-spring-core-concepts.md
 ---
 
 ---
@@ -84,7 +83,7 @@ layout: center
 Organizing a Spring Boot Application
 
 ---
-src: ./contents/04-project-structure.md
+src: ./sections/04-project-structure.md
 ---
 
 ---
@@ -96,7 +95,7 @@ layout: center
 Controllers, Services, and HTTP
 
 ---
-src: ./contents/05-rest-api.md
+src: ./sections/05-rest-api.md
 ---
 
 ---
@@ -108,7 +107,7 @@ layout: center
 Properties, Profiles, and Environment
 
 ---
-src: ./contents/07-configuration.md
+src: ./sections/07-configuration.md
 ---
 
 ---
@@ -120,19 +119,7 @@ layout: center
 Graceful Error Management
 
 ---
-src: ./contents/08-exception-handling.md
----
-
----
-layout: center
----
-
-# Validation
-
-Input Validation with Bean Validation
-
----
-src: ./contents/09-validation.md
+src: ./sections/08-exception-handling.md
 ---
 
 ---
@@ -144,5 +131,5 @@ layout: center
 Unit and Integration Tests
 
 ---
-src: ./contents/10-testing.md
+src: ./sections/10-testing.md
 ---

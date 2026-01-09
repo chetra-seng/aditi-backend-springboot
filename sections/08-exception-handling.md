@@ -96,14 +96,20 @@ public class UnauthorizedException extends RuntimeException {
 @Service
 public class UserService {
 
+    private final Map<Long, User> users = new HashMap<>();
+
     public User findById(Long id) {
-        return userRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(
-                "User", "id", id));
+        User user = users.get(id);
+        if (user == null) {
+            throw new ResourceNotFoundException("User", "id", id);
+        }
+        return user;
     }
 
     public User createUser(UserRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+        boolean emailExists = users.values().stream()
+            .anyMatch(u -> u.getEmail().equals(request.getEmail()));
+        if (emailExists) {
             throw new ConflictException(
                 "Email already registered: " + request.getEmail());
         }
@@ -349,11 +355,14 @@ Quick inline exception handling:
 ```java
 @GetMapping("/{id}")
 public User getUser(@PathVariable Long id) {
-    return userRepository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(
+    User user = userService.findById(id);
+    if (user == null) {
+        throw new ResponseStatusException(
             HttpStatus.NOT_FOUND,
             "User not found with id: " + id
-        ));
+        );
+    }
+    return user;
 }
 ```
 

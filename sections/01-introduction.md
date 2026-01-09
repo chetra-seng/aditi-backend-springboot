@@ -12,15 +12,16 @@
 
 # Course Agenda
 
-| Session | Topic |
-|---------|-------|
-| 1 | Introduction & Setup |
-| 2 | Spring Core Concepts (IoC, DI, Beans) |
-| 3 | Project Structure & Configuration |
-| 4 | Building REST APIs |
-| 5 | Exception Handling |
-| 6 | Validation |
-| 7 | Testing |
+<v-clicks>
+
+1. Introduction & Setup
+2. Spring Core Concepts (IoC, DI, Beans)
+3. Project Structure & Configuration
+4. Building REST APIs
+5. Exception Handling
+6. Testing
+
+</v-clicks>
 
 ---
 
@@ -179,23 +180,6 @@ Social platform services
 - **Basic HTTP** - Request/response, status codes
 - **JSON** - Data format basics
 - **IDE Familiarity** - IntelliJ IDEA or VS Code
-
-</v-clicks>
-
----
-
-# What You'll Learn
-
-By the end of this course, you'll be able to:
-
-<v-clicks>
-
-- Create a complete **REST API** with Spring Boot
-- Understand **Dependency Injection** and IoC
-- Configure applications with **properties** and **profiles**
-- Implement proper **error handling**
-- Add **input validation** to your APIs
-- Write **unit and integration tests**
 
 </v-clicks>
 

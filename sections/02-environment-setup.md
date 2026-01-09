@@ -11,8 +11,7 @@
 1. **Java Development Kit (JDK)** - Version 17 or higher
 2. **IDE** - IntelliJ IDEA (recommended) or VS Code
 3. **Build Tool** - Maven or Gradle
-4. **Database** - PostgreSQL or H2 (embedded)
-5. **API Testing** - Postman or curl
+4. **API Testing** - Postman or curl
 
 </v-clicks>
 
@@ -162,45 +161,65 @@ For this course, add these starters:
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- JPA -->
+    <!-- Lombok -->
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <optional>true</optional>
     </dependency>
 
-    <!-- Validation -->
+    <!-- MapStruct -->
+    <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>1.5.5.Final</version>
+    </dependency>
+
+    <!-- DevTools -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-validation</artifactId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+
+    <!-- Test -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
     </dependency>
 </dependencies>
 ```
 
 ---
 
-# Additional Dependencies
+# MapStruct Annotation Processor
+
+Add to `pom.xml` build section (required for code generation):
 
 ```xml
-<!-- H2 Database (for development) -->
-<dependency>
-    <groupId>com.h2database</groupId>
-    <artifactId>h2</artifactId>
-    <scope>runtime</scope>
-</dependency>
-
-<!-- Lombok (optional but recommended) -->
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <optional>true</optional>
-</dependency>
-
-<!-- DevTools -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-devtools</artifactId>
-    <scope>runtime</scope>
-</dependency>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                    <path>
+                        <groupId>org.mapstruct</groupId>
+                        <artifactId>mapstruct-processor</artifactId>
+                        <version>1.5.5.Final</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 ```
 
 ---

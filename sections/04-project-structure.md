@@ -137,13 +137,8 @@ resources/
 # Server configuration
 server.port=8080
 
-# Database configuration
-spring.datasource.url=jdbc:h2:mem:testdb
-spring.datasource.driver-class-name=org.h2.Driver
-
-# JPA configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+# Application info
+spring.application.name=my-app
 
 # Logging
 logging.level.root=INFO
@@ -159,13 +154,8 @@ server:
   port: 8080
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  application:
+    name: my-app
 
 logging:
   level:
@@ -217,15 +207,12 @@ java -jar app.jar --spring.profiles.active=prod
 ```properties
 # application-dev.properties
 
-# Use H2 in-memory database
-spring.datasource.url=jdbc:h2:mem:devdb
-spring.h2.console.enabled=true
-
-# Show SQL queries
-spring.jpa.show-sql=true
+# Server port
+server.port=8080
 
 # Detailed logging
 logging.level.com.example=DEBUG
+logging.level.org.springframework.web=DEBUG
 ```
 
 ---
@@ -235,16 +222,12 @@ logging.level.com.example=DEBUG
 ```properties
 # application-prod.properties
 
-# Use PostgreSQL
-spring.datasource.url=jdbc:postgresql://localhost:5432/proddb
-spring.datasource.username=${DB_USER}
-spring.datasource.password=${DB_PASSWORD}
+# Server port
+server.port=80
 
-# Validate schema only
-spring.jpa.hibernate.ddl-auto=validate
-
-# Less logging
+# Minimal logging
 logging.level.com.example=WARN
+logging.level.org.springframework.web=WARN
 ```
 
 ---
@@ -254,16 +237,16 @@ logging.level.com.example=WARN
 Use placeholders for sensitive data:
 
 ```properties
-spring.datasource.username=${DB_USER:defaultUser}
-spring.datasource.password=${DB_PASSWORD}
+app.api-key=${API_KEY}
+app.secret=${APP_SECRET:defaultSecret}
 ```
 
 <v-click>
 
 Set environment variables:
 ```bash
-export DB_USER=admin
-export DB_PASSWORD=secret123
+export API_KEY=your-api-key
+export APP_SECRET=secret123
 java -jar app.jar
 ```
 
@@ -307,7 +290,6 @@ Pre-packaged dependency bundles:
 | Starter | Includes |
 |---------|----------|
 | spring-boot-starter-web | Spring MVC, Tomcat, Jackson |
-| spring-boot-starter-data-jpa | JPA, Hibernate, HikariCP |
 | spring-boot-starter-security | Spring Security |
 | spring-boot-starter-test | JUnit, Mockito, AssertJ |
 
@@ -322,10 +304,8 @@ test/
         ├── DemoApplicationTests.java
         ├── controller/
         │   └── UserControllerTest.java
-        ├── service/
-        │   └── UserServiceTest.java
-        └── repository/
-            └── UserRepositoryTest.java
+        └── service/
+            └── UserServiceTest.java
 ```
 
 ---
@@ -336,47 +316,206 @@ test/
 com.example.demo/
 ├── DemoApplication.java
 ├── config/
-│   ├── WebConfig.java
-│   └── SecurityConfig.java
+│   └── WebConfig.java
 ├── controller/
 │   └── UserController.java
 ├── service/
-│   ├── UserService.java
-│   └── impl/
-│       └── UserServiceImpl.java
-├── repository/
-│   └── UserRepository.java
+│   └── UserService.java
 ├── model/
-│   ├── entity/
-│   │   └── User.java
-│   └── dto/
-│       ├── UserRequest.java
-│       └── UserResponse.java
+│   ├── User.java
+│   ├── UserRequest.java
+│   └── UserResponse.java
 └── exception/
     └── UserNotFoundException.java
 ```
 
 ---
 
-# DTO vs Entity
+# The Boilerplate Problem
 
-**Entity** - Maps to database table:
+A simple model class requires so much code:
+
 ```java
-@Entity
 public class User {
-    @Id
     private Long id;
     private String name;
+    private String email;
+
+    public User() {}
+    public User(Long id, String name, String email) {
+        this.id = id; this.name = name; this.email = email;
+    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    // ... equals(), hashCode(), toString() ...
+}
+```
+
+😫 50+ lines for 3 fields!
+
+---
+
+# Lombok to the Rescue
+
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+}
+```
+
+<v-click>
+
+✅ Same functionality in 8 lines!
+
+`@Data` generates: getters, setters, `toString()`, `equals()`, `hashCode()`
+
+</v-click>
+
+---
+
+# Common Lombok Annotations
+
+| Annotation | What it generates |
+|------------|------------------|
+| `@Getter` / `@Setter` | Getters and setters |
+| `@NoArgsConstructor` | Empty constructor |
+| `@AllArgsConstructor` | Constructor with all fields |
+| `@Data` | All of the above + toString, equals, hashCode |
+| `@Builder` | Builder pattern |
+
+---
+
+# Lombok @Builder
+
+```java
+@Data
+@Builder
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+}
+```
+
+```java
+User user = User.builder()
+    .id(1L)
+    .name("John")
+    .email("john@example.com")
+    .build();
+```
+
+---
+
+# Model vs DTO
+
+**Model** - Internal representation:
+```java
+@Data
+public class User {
+    private Long id;
+    private String name;
+    private String email;
     private String password; // Sensitive!
 }
 ```
 
-**DTO** - Data transfer object:
+**DTO** - Data transfer object (API response):
 ```java
+@Data
 public class UserResponse {
     private Long id;
     private String name;
+    private String email;
     // No password exposed!
+}
+```
+
+---
+
+# The Mapping Problem
+
+Converting Model → DTO manually is tedious:
+
+```java
+public UserResponse toResponse(User user) {
+    UserResponse response = new UserResponse();
+    response.setId(user.getId());
+    response.setName(user.getName());
+    response.setEmail(user.getEmail());
+    return response;
+}
+```
+
+<v-click>
+
+😫 Imagine doing this for 20 fields... and for every model!
+
+</v-click>
+
+---
+
+# MapStruct to the Rescue
+
+```java
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+
+    UserResponse toResponse(User user);
+
+    User toModel(UserRequest request);
+
+    List<UserResponse> toResponseList(List<User> users);
+}
+```
+
+<v-click>
+
+✅ MapStruct generates the implementation at compile time!
+
+</v-click>
+
+---
+
+# Using MapStruct
+
+```java
+@Service
+public class UserService {
+
+    private final UserMapper userMapper;
+
+    public UserService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
+
+    public UserResponse getUser(Long id) {
+        User user = findById(id);
+        return userMapper.toResponse(user);  // Auto-maps fields!
+    }
+}
+```
+
+---
+
+# MapStruct Custom Mapping
+
+When field names don't match:
+
+```java
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+
+    @Mapping(source = "name", target = "fullName")
+    @Mapping(target = "id", ignore = true)
+    UserResponse toResponse(User user);
 }
 ```
 
@@ -387,15 +526,13 @@ public class UserResponse {
 ```
 ┌─────────────────────────────────────────┐
 │           Controller Layer              │
-│      (REST endpoints, validation)       │
+│         (REST endpoints, HTTP)          │
 ├─────────────────────────────────────────┤
 │            Service Layer                │
-│       (Business logic, transactions)    │
+│          (Business logic)               │
 ├─────────────────────────────────────────┤
 │          Repository Layer               │
-│         (Data access, queries)          │
-├─────────────────────────────────────────┤
-│              Database                   │
+│       (Data access, storage)            │
 └─────────────────────────────────────────┘
 ```
 
@@ -411,6 +548,6 @@ public class UserResponse {
 - `application.properties` or `application.yml` for configuration
 - Profiles for environment-specific settings
 - Use environment variables for sensitive data
-- Keep entities and DTOs separate
+- Keep models and DTOs separate
 
 </v-clicks>

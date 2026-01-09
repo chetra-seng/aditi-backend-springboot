@@ -218,19 +218,20 @@ Indicates a service containing business logic.
 @Repository
 public class UserRepository {
 
+    private final Map<Long, User> users = new HashMap<>();
+
     public User save(User user) {
-        // Save to database
+        users.put(user.getId(), user);
         return user;
     }
 
     public Optional<User> findById(Long id) {
-        // Find from database
-        return Optional.empty();
+        return Optional.ofNullable(users.get(id));
     }
 }
 ```
 
-Indicates data access layer, enables exception translation.
+Indicates data access layer. Can be in-memory or database-backed.
 
 ---
 
@@ -385,22 +386,22 @@ When multiple beans of same type exist:
 
 ```java
 @Configuration
-public class DataSourceConfig {
+public class NotificationConfig {
     @Bean
-    @Qualifier("primary")
-    public DataSource primaryDataSource() { /* ... */ }
+    @Qualifier("email")
+    public NotificationService emailNotification() { /* ... */ }
 
     @Bean
-    @Qualifier("secondary")
-    public DataSource secondaryDataSource() { /* ... */ }
+    @Qualifier("sms")
+    public NotificationService smsNotification() { /* ... */ }
 }
 ```
 
 ```java
 @Service
-public class UserService {
-    public UserService(@Qualifier("primary") DataSource dataSource) {
-        // Uses primary data source
+public class AlertService {
+    public AlertService(@Qualifier("email") NotificationService notifier) {
+        // Uses email notification
     }
 }
 ```
@@ -414,27 +415,29 @@ Mark a bean as the default choice:
 ```java
 @Bean
 @Primary
-public DataSource primaryDataSource() {
-    return new HikariDataSource();
+public NotificationService emailNotification() {
+    return new EmailNotificationService();
 }
 
 @Bean
-public DataSource backupDataSource() {
-    return new HikariDataSource();
+public NotificationService smsNotification() {
+    return new SmsNotificationService();
 }
 ```
 
-When injecting `DataSource`, the `@Primary` bean is used by default.
+When injecting `NotificationService`, the `@Primary` bean is used by default.
 
 ---
 
 # Bean Lifecycle
 
-```
-Instantiate → Populate Properties → BeanNameAware →
-BeanFactoryAware → Pre-initialization → InitializingBean →
-Custom init → Post-initialization → Ready →
-DisposableBean → Custom destroy → Destroyed
+```mermaid
+flowchart LR
+    A[Instantiate] --> B[Set Properties]
+    B --> C["@PostConstruct"]
+    C --> D[Ready ✅]
+    D --> E["@PreDestroy"]
+    E --> F[Destroyed]
 ```
 
 ---
