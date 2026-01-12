@@ -1,30 +1,3 @@
-# Spring Boot Basics
-
-## Building Modern Java Applications
-
-<div class="pt-12">
-  <span class="px-2 py-1">
-    Fundamentals Course
-  </span>
-</div>
-
----
-
-# Course Agenda
-
-<v-clicks>
-
-1. Introduction & Setup
-2. Spring Core Concepts (IoC, DI, Beans)
-3. Project Structure & Configuration
-4. Building REST APIs
-5. Exception Handling
-6. Testing
-
-</v-clicks>
-
----
-
 # What is Spring?
 
 Spring is a comprehensive **framework** for building Java applications
@@ -183,16 +156,3 @@ Social platform services
 
 </v-clicks>
 
----
-
-# Coming Up Next...
-
-In future sessions, we'll also cover:
-
-<v-clicks>
-
-- **Spring Data JPA** - Database integration
-- **Spring Security** - Authentication & authorization
-- **Deployment** - Docker, cloud platforms
-
-</v-clicks>
