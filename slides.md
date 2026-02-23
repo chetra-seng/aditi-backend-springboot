@@ -41,7 +41,7 @@ Building Modern Java Applications
 
 ---
 
-# What are we doing today 🚀
+# What we'll be learning 🚀
 
 - Understand what Spring and Spring Boot are
 - Set up a Spring Boot project from scratch
