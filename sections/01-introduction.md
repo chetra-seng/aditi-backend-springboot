@@ -96,13 +96,18 @@ Spring Boot is an **opinionated** framework built on top of Spring
 
 # Spring Boot Features
 
-```
-                    Spring Boot
-                         |
-    +---------+---------+---------+---------+
-    |         |         |         |         |
-Auto-Config  Starters  Actuator  DevTools  CLI
-```
+<div class="flex flex-col items-center gap-2 text-xs mt-2">
+  <div class="p-2 px-6 border-2 border-blue-400 rounded-lg font-bold text-blue-400 bg-blue-500 bg-opacity-10 text-sm">
+    Spring Boot
+  </div>
+  <div class="flex gap-3">
+    <div class="p-2 px-3 border border-slate-400 rounded text-center bg-slate-500 bg-opacity-10">Auto-Config</div>
+    <div class="p-2 px-3 border border-slate-400 rounded text-center bg-slate-500 bg-opacity-10">Starters</div>
+    <div class="p-2 px-3 border border-slate-400 rounded text-center bg-slate-500 bg-opacity-10">Actuator</div>
+    <div class="p-2 px-3 border border-slate-400 rounded text-center bg-slate-500 bg-opacity-10">DevTools</div>
+    <div class="p-2 px-3 border border-slate-400 rounded text-center bg-slate-500 bg-opacity-10">CLI</div>
+  </div>
+</div>
 
 <v-clicks>
 

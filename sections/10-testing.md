@@ -19,18 +19,20 @@
 
 # Testing Pyramid
 
-```
-          /\
-         /  \
-        / E2E\        Few
-       /______\
-      /        \
-     /Integration\    Some
-    /______________\
-   /                \
-  /    Unit Tests    \  Many
- /____________________\
-```
+<div class="flex flex-col items-center gap-1 text-xs mt-2">
+  <div class="p-2 bg-red-500 bg-opacity-20 border border-red-400 rounded text-center w-28">
+    <span class="font-bold text-red-400">E2E</span>
+    <span class="text-slate-400 ml-2">— Few</span>
+  </div>
+  <div class="p-2 bg-amber-500 bg-opacity-20 border border-amber-400 rounded text-center w-44">
+    <span class="font-bold text-amber-400">Integration</span>
+    <span class="text-slate-400 ml-2">— Some</span>
+  </div>
+  <div class="p-2 bg-green-500 bg-opacity-20 border border-green-400 rounded text-center w-60">
+    <span class="font-bold text-green-400">Unit Tests</span>
+    <span class="text-slate-400 ml-2">— Many</span>
+  </div>
+</div>
 
 ---
 
@@ -252,12 +254,7 @@ void shouldCreateUser() throws Exception {
 void shouldReturn400ForInvalidInput() throws Exception {
     mockMvc.perform(post("/api/users")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("""
-                {
-                    "name": "",
-                    "email": "invalid-email"
-                }
-                """))
+            .content("{\"name\":\"\",\"email\":\"invalid-email\"}"))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.errors.name").exists())
         .andExpect(jsonPath("$.errors.email").exists());
@@ -280,17 +277,11 @@ class UserIntegrationTest {
 
     @Test
     void shouldCreateAndRetrieveUser() throws Exception {
-        // Create user
-        MvcResult result = mockMvc.perform(post("/api/users")
+        mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"John\",\"email\":\"john@test.com\"}"))
-            .andExpect(status().isCreated())
-            .andReturn();
+            .andExpect(status().isCreated());
 
-        // Extract ID from response
-        String response = result.getResponse().getContentAsString();
-
-        // Verify user can be retrieved
         mockMvc.perform(get("/api/users/1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value("John"));

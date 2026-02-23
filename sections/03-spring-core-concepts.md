@@ -30,16 +30,24 @@ public class OrderService {
 
 # IoC Principle
 
-```
-Traditional:                    IoC:
-+-------------+                +-------------+
-| OrderService|                |  Container  |
-|  creates    |                |   creates   |
-|      |      |                |      |      |
-|      v      |                |      v      |
-|PaymentService|               |   Objects   |
-+-------------+                +-------------+
-```
+<div class="grid grid-cols-2 gap-8 text-xs mt-2">
+  <div>
+    <div class="text-center text-slate-400 mb-2 font-bold text-sm">Traditional</div>
+    <div class="flex flex-col gap-1 items-center">
+      <div class="p-2 px-4 border border-slate-400 rounded text-center">OrderService</div>
+      <div class="text-slate-400">creates ↓</div>
+      <div class="p-2 px-4 border border-slate-400 rounded text-center">PaymentService</div>
+    </div>
+  </div>
+  <div>
+    <div class="text-center text-blue-400 mb-2 font-bold text-sm">IoC</div>
+    <div class="flex flex-col gap-1 items-center">
+      <div class="p-2 px-4 border-2 border-blue-400 rounded text-center text-blue-400 font-bold bg-blue-500 bg-opacity-10">Container</div>
+      <div class="text-slate-400">creates ↓</div>
+      <div class="p-2 px-4 border border-slate-400 rounded text-center">Objects</div>
+    </div>
+  </div>
+</div>
 
 > "Don't call us, we'll call you" - Hollywood Principle
 

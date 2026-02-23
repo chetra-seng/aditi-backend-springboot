@@ -523,18 +523,20 @@ public interface UserMapper {
 
 # Layered Architecture
 
-```
-┌─────────────────────────────────────────┐
-│           Controller Layer              │
-│         (REST endpoints, HTTP)          │
-├─────────────────────────────────────────┤
-│            Service Layer                │
-│          (Business logic)               │
-├─────────────────────────────────────────┤
-│          Repository Layer               │
-│       (Data access, storage)            │
-└─────────────────────────────────────────┘
-```
+<div class="flex flex-col text-xs mt-2 max-w-xs mx-auto">
+  <div class="p-3 border-2 border-blue-400 rounded-t-lg text-center bg-blue-500 bg-opacity-10">
+    <div class="font-bold text-blue-400">Controller Layer</div>
+    <div class="text-slate-400">(REST endpoints, HTTP)</div>
+  </div>
+  <div class="p-3 border-2 border-t-0 border-green-400 text-center bg-green-500 bg-opacity-10">
+    <div class="font-bold text-green-400">Service Layer</div>
+    <div class="text-slate-400">(Business logic)</div>
+  </div>
+  <div class="p-3 border-2 border-t-0 border-amber-400 rounded-b-lg text-center bg-amber-500 bg-opacity-10">
+    <div class="font-bold text-amber-400">Repository Layer</div>
+    <div class="text-slate-400">(Data access, storage)</div>
+  </div>
+</div>
 
 ---
 
